@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Modal, StyleSheet, ActivityIndicator, Button, Linking  } from 'react-native';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NotificationProvider } from './Context/NotificationContext';
@@ -8,29 +7,31 @@ import { SpinnerProvider } from './Context/SpinnerContext';
 import LoginForm from './Components/ui/LoginForm';
 import RegisterForm from './Components/ui/RegisterForm';
 import ResetPasswordForm from './Components/ui/ResetPasswordForm';
-import HomeComponent from './Components/ui/HomeComponent';
-import EncodageCrypto from './Components/ui/Utils/CryptoEncodage';
-import DetailsCrypto from './Components/ui/Utils/DetailsCrypto';
-import { AuthProvider } from './Context/AuthContext';
-import { StatusBar } from 'react-native';
-import AuthChecker from './Context/AuthChecker';
-import { DataProvider } from './Context/DataContext';
-
-
+import HomeComponent from './Components/ui/HomeComponent'; // Assurez-vous que c'est le bon chemin
+import { AuthProvider, useAuth } from './Context/AuthContext';
+import { StatusBar } from 'react-native'; // Ajoutez cette ligne
+import AuthChecker from './Context/AuthChecker'; // Assurez-vous que le chemin d'accès est correct.
 const Stack = createNativeStackNavigator();
 
+/*function AuthChecker({ navigation }) {
+  const { isAuthenticated, isLoading } = useAuth();
 
+  React.useEffect(() => {
+    if (!isLoading) {
+      navigation.navigate(isAuthenticated ? 'Home' : 'Login');
+    }
+  }, [isAuthenticated, isLoading, navigation]);
 
-
-
+  return null;
+}
+*/
 function AppRoutes() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="AuthChecker" component={AuthChecker} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={LoginForm} options={{ headerShown: false }} />
       <Stack.Screen name="Home" component={HomeComponent} options={{ headerShown: false }} />
-      <Stack.Screen name="EncodageCrypto" component={EncodageCrypto} options={{ headerShown: false }} />
-      <Stack.Screen name="DetailsCrypto" component={DetailsCrypto} options={{ headerShown: false }} />
+      
       <Stack.Screen name="Register" component={RegisterForm} options={{ headerShown: false }} />
       <Stack.Screen name="ResetPassword" component={ResetPasswordForm} options={{ headerShown: false }} />
     </Stack.Navigator>
@@ -38,24 +39,18 @@ function AppRoutes() {
 }
 
 export default function AppWrapper() {
-
-
-
-
   return (
     <NavigationContainer>
       <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
+     
       <AuthProvider>
         <NotificationProvider>
           <SpinnerProvider>
-            <DataProvider>
-              <ModalNotification />
-              <AppRoutes />
-            </DataProvider>
+            <ModalNotification />
+            <AppRoutes />
           </SpinnerProvider>
         </NotificationProvider>
       </AuthProvider>
     </NavigationContainer>
   );
 }
-
